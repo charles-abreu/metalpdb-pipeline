@@ -1,9 +1,2 @@
-pdbs com problema
-
-207d - KeyError: '_refine.ls_d_res_high'
 7a09 - FileNotFoundError: [Errno 2] No such file or directory: '/app/findgeo/output/Zn_201__122048_CB/findgeo.out'
 7a0d - DSSP failed to produce an output
-7a0s - size?
-
-1a1t - ????????????????
-7a18 - ????

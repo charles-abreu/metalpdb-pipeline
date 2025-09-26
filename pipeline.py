@@ -8,7 +8,6 @@ import pymongo
 MONGO_URL = "mongodb://localhost:27017/"
 DB_NAME = "metalpdb2"
 SITE_COLLECTION = "site"
-
 PDB_STORE = "/bioinfo_data/WBIOCAT/pdb"
 
 def unzip(file_name, outpu="string"): # string, bytes, file
@@ -66,16 +65,19 @@ if __name__ == "__main__":
 
             pdb_id = os.path.basename(pdb_file).split(".")[0]
 
-            resultado = collection.find_one({"site_id": f"{pdb_id}_1"})
+            """
+                resultado = collection.find_one({"site_id": f"{pdb_id}_1"})
             
-            if resultado:
-                continue
+                if resultado:
+                    continue
+            """
 
             # check error list
             if pdb_file in error_list:
                 continue
 
             # check file size
+            """
             tamanho_bytes = os.path.getsize(pdb_file)
             tamanho_mb = tamanho_bytes / (1024 * 1024)
 
@@ -83,7 +85,7 @@ if __name__ == "__main__":
                 with open("size_list.list", "a") as out_file:
                         out_file.write(f"{pdb_file}\n")
                 continue
-            
+            """
             
             parser = MMCIFParser(QUIET= True)
             model = parser.get_structure(pdb_id, unzip(pdb_file))
@@ -92,7 +94,7 @@ if __name__ == "__main__":
                 
                 print(i, pdb_file)
 
-                x = requests.get(f"http://localhost:50001/mfs/extract?pdb_id={pdb_id}&dssp=true&findgeo=true&insert=true")
+                x = requests.get(f"http://localhost:50001/mfs/extract?pdb_id={pdb_id}&dssp=false&findgeo=false&insert=true")
                 
                 if x.status_code != 200:
                     print(f"{pdb_file} - ERROR")
