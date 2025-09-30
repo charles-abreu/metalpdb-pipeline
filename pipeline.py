@@ -34,8 +34,7 @@ def has_metals(model):
     return False
     
 
-if __name__ == "__main__":
-
+def insert_pipeline():
     client = pymongo.MongoClient(MONGO_URL)
     db = client[DB_NAME]
     collection = db[SITE_COLLECTION]
@@ -105,3 +104,26 @@ if __name__ == "__main__":
 
         with open("dir_lsit.list", "a") as out_file:
             out_file.write(f"{d}\n")
+
+def update_structure_pipeline():
+    with open("dir_list.list") as in_file:
+        dir_list = [line.strip() for line in in_file.read().split("\n")]
+
+        for d in dir_list:
+
+            pdb_list = glob(f"{d}/*.cif.gz")
+            
+            for i, pdb_file in enumerate(pdb_list):
+                pdb_id = os.path.basename(pdb_file).split(".")[0]
+                model = MMCIFParser(QUIET= True).get_structure(pdb_id, unzip(pdb_file))
+
+                if has_metals(model):
+                    print(i, pdb_file)
+                    x = requests.get(f"http://localhost:50002/mfs/structure?pdb_id={pdb_id}")
+
+
+
+
+if __name__ == "__main__":
+    update_structure_pipeline()
+    
